@@ -3,6 +3,7 @@ package org.example.courier;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 
@@ -19,6 +20,7 @@ public class CourierClient extends org.example.Client {
                 .when()
                 .post(COURIER_LOGIN_PATH)
                 .then().log().all();
+
     }
     @Step("Created new Courier from random")
     public  ValidatableResponse createCourier(Courier courier) {
@@ -29,9 +31,16 @@ public class CourierClient extends org.example.Client {
                 .then().log().all();
     }
 
+    @Step("Created new Courier from random")
+    public  ValidatableResponse createBadCourier(BadCourier badCourier) {
+        return spec()
+                .body(badCourier)
+                .when()
+                .post(COURIER_PATH)
+                .then().log().all();
+    }
 
-
-    @Step("Deleted Courier")
+    @Step("Deleted Courier with ID")
     public ValidatableResponse deleteCourier(int courierId) {
         return spec()
                 .body(Map.of("id",String.valueOf(courierId)))
@@ -39,4 +48,12 @@ public class CourierClient extends org.example.Client {
                 .delete(COURIER_PATH+"/"+courierId)
                 .then().log().all();
     }
+    @Step("Deleted Courier with ID")
+    public ValidatableResponse deleteCourierWithoutId() {
+        return spec()
+                .when()
+                .delete(COURIER_PATH+"/:id")
+                .then().log().all();
+    }
+
 }
