@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class CourierAssertions {
-    @Step("Check of successfully logged")
+    @Step("Check of successfully logged and return courierId")
     public int loggedSuccessfully(ValidatableResponse loginResponse) {
         int id = loginResponse
                 .assertThat()
@@ -28,7 +28,7 @@ public class CourierAssertions {
     }
 
 
-    @Step("Error for created Tmin Courier")
+    @Step("Check of unsuccessfully  for created Twin Courier")
     public void createdTwinUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
@@ -37,20 +37,20 @@ public class CourierAssertions {
                 .statusCode(HttpURLConnection.HTTP_CONFLICT);
 
     }
-
+    @Step("Check of unsuccessfully  created Courier with empty data")
     public void createdEmptyUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
-                .body("message", equalTo(ErrorMessage.NOT_ENOUGH_DATA))
+                .body("message", equalTo(ErrorMessage.NOT_ENOUGH_DATA_CREATED))
                 .and()
                 .statusCode(HttpURLConnection.HTTP_BAD_REQUEST);
 
     }
-
+    @Step("Check of unsuccessfully  created courier with not enough data")
     public void createdBadUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
-                .body("message", equalTo(ErrorMessage.NOT_ENOUGH_DATA))
+                .body("message", equalTo(ErrorMessage.NOT_ENOUGH_DATA_CREATED))
                 .and()
                 .statusCode(HttpURLConnection.HTTP_BAD_REQUEST);
 
@@ -61,16 +61,16 @@ public class CourierAssertions {
                 .assertThat()
                 .statusCode(HttpURLConnection.HTTP_OK);
     }
-
-    public void deletedNotFoundIdSuccessfulle(ValidatableResponse response) {
+    @Step("Check of unsuccessfully deleted Courier by not found")
+    public void deletedNotFoundIdSuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
                 .body("message", equalTo(ErrorMessage.COURIER_NOT_FOUND))
                 .and()
                 .statusCode(HttpURLConnection.HTTP_NOT_FOUND);
     }
-
-    public void deletedWithoutIdSuccessfulle(ValidatableResponse response) {
+    @Step("Check of unsuccessfully deleted Courier without id")
+    public void deletedWithoutIdSuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
                 .body("message", equalTo(ErrorMessage.COURIER_WITHOUT_ID))
@@ -78,7 +78,7 @@ public class CourierAssertions {
                 .statusCode(HttpURLConnection.HTTP_INTERNAL_ERROR);
     }
 
-
+    @Step("Check of unsuccessfully logged Courier with non-existen data")
     public void loggedNotExistLogPassUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
@@ -86,7 +86,7 @@ public class CourierAssertions {
                 .and()
                 .statusCode(HttpURLConnection.HTTP_NOT_FOUND);
     }
-
+    @Step("Check of unsuccessfully logged Courier with  not enough data")
     public void loggedNotEnoughUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
@@ -94,11 +94,19 @@ public class CourierAssertions {
                 .and()
                 .statusCode(HttpURLConnection.HTTP_BAD_REQUEST);
     }
-
+    @Step("Check of unsuccessfully logged Courier with null password")
     public void loggedNullPassUnsuccessfully(ValidatableResponse response) {
         response
                 .assertThat()
                 .and()
                 .statusCode(HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+    }
+    @Step("Check of unsuccessfully created Courier with already exist login")
+    public void createdExistLoginUnsuccessfully(ValidatableResponse response) {
+        response
+                .assertThat()
+                .body("message", equalTo(ErrorMessage.COURIER_EXIST_LOGIN))
+                .and()
+                .statusCode(HttpURLConnection.HTTP_CONFLICT);
     }
 }

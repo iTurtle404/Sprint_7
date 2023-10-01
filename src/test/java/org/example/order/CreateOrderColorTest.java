@@ -1,13 +1,16 @@
 package org.example.order;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import static org.hamcrest.Matchers.notNullValue;
+import static org.example.constant.OrderList.TRACK;
 
+@DisplayName("Check successfully post /api/v1/orders with color")
 @RunWith(Parameterized.class)
 public class CreateOrderColorTest extends OrderGenerator {
     private final OrderClient client = new OrderClient();
@@ -35,11 +38,12 @@ public class CreateOrderColorTest extends OrderGenerator {
     }
 
     @Test
+    @Description("Possible create order with color")
     public void orderCreatedWithColorPositive() {
         var order = genericOrderRandomWithColour(color);
         ValidatableResponse createResponse = client.createdOrder(order);
-        check.createdOrderSuccessfully(createResponse);
+        int trackId= check.createdOrderSuccessfully(createResponse);
+        client.cancelOrder(TRACK, trackId);
     }
-
 }
 

@@ -6,8 +6,6 @@ import org.example.Client;
 
 import java.util.Map;
 
-import static org.example.constant.OrderList.COURIER_ID;
-import static org.example.constant.OrderList.NEAREST_STATION;
 import static org.example.constant.URLForEndpoint.*;
 
 public class OrderClient extends Client {
@@ -29,14 +27,7 @@ public class OrderClient extends Client {
                 .get(ORDERS_TRACK+"?t="+ trackId)
                 .then().log().all();
     }
-
-    public ValidatableResponse acceptedOrder(int courierId, int trackId) {
-        return spec()
-                .when()
-                .put(ORDERS_ACCEPT+trackId +"?courierId="+courierId)
-                .then().log().all();
-    };
-
+    @Step("Get Order List without param")
     public ValidatableResponse getOrderListWithoutParam() {
         return spec()
                 .when()
@@ -44,6 +35,7 @@ public class OrderClient extends Client {
                 .then().log().all();
     }
 
+    @Step("Get Order List with courier id")
     public ValidatableResponse getOrderListWithCourierId(String id, String idValue) {
         return spec()
                 .when()
@@ -51,6 +43,7 @@ public class OrderClient extends Client {
                 .get(ORDERS)
                 .then().log().all();
     }
+    @Step("Get Order List with near station")
     public ValidatableResponse getOrderListWithStation(String id, String idValue, String nearestStation, String nearStationValue) {
         return spec()
                 .when()
@@ -60,6 +53,7 @@ public class OrderClient extends Client {
                 .then().log().all();
     }
 
+    @Step("Get Order List with limit")
     public ValidatableResponse getOrderListWithLimit(String id, String idValue, String station, String stationValue) {
         return spec()
                 .when()
@@ -69,6 +63,7 @@ public class OrderClient extends Client {
                 .then().log().all();
     }
 
+    @Step("Get Order List with limit and near station")
     public ValidatableResponse getOrderListWithLimitStation(String limit, String limitValue, String page, String pageValue, String nearestStation, String nearStationValue) {
         return spec()
                 .when()
@@ -76,6 +71,32 @@ public class OrderClient extends Client {
                 .queryParam(page,pageValue)
                 .queryParam(nearestStation,nearStationValue )
                 .get(ORDERS)
+                .then().log().all();
+    }
+
+    @Step("Cancel Order with correct data")
+    public ValidatableResponse cancelOrder(String trackId, int valueTrackId) {
+        return spec()
+                .when()
+                .queryParam(trackId,valueTrackId)
+                .put(ORDERS_CANCEL)
+                .then().log().all();
+    }
+
+    @Step("Cancel Order without ID")
+    public ValidatableResponse cancelOrderWithoutOrder() {
+        return spec()
+                .when()
+                .put(ORDERS_CANCEL)
+                .then().log().all();
+    }
+
+    @Step("Cancel Order with non-exist ID")
+    public ValidatableResponse cancelOrderWithNotExistOrder(String trackId, int valueTrackId) {
+        return spec()
+                .when()
+                .queryParam(trackId,valueTrackId)
+                .put(ORDERS_CANCEL)
                 .then().log().all();
     }
 }

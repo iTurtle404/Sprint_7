@@ -1,5 +1,7 @@
 package org.example.courier;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 
@@ -10,11 +12,10 @@ public class DeleteCourierTest {
     private final CourierAssertions check = new CourierAssertions();
     private int courierId;
 
-
-
     @Test
+    @DisplayName("Check successfully delete /api/v1/courier/:id with correct data")
+    @Description("Possible delete courier with correct data")
     public void courierDeletePositive() {
-
         var courier = genericCourierRandom();
         client.createCourier(courier);
         var creds = Credentials.from(courier);
@@ -25,19 +26,18 @@ public class DeleteCourierTest {
     }
 
     @Test
-    public  void  couirierDeleteNotFoundId(){
-        var courier = genericCourierRandom();
-        client.createCourier(courier);
+    @DisplayName("Check unsuccessfully delete /api/v1/courier/:id with non-existen id")
+    @Description("Impossible  delete courier with non-existen id")
+    public  void courierDeleteNotFoundId(){
         ValidatableResponse delete = client.deleteCourier(courierId);
-        check.deletedNotFoundIdSuccessfulle(delete);
+        check.deletedNotFoundIdSuccessfully(delete);
     }
 
     @Test
-    public  void  couirierDeleteWithoutId(){
-        var courier = genericCourierRandom();
-        client.createCourier(courier);
+    @DisplayName("Check unsuccessfully delete /api/v1/courier/:id without id")
+    @Description("Impossible  delete courier without id")
+    public  void courierDeleteWithoutId(){
         ValidatableResponse delete = client.deleteCourierWithoutId();
-        check.deletedWithoutIdSuccessfulle(delete);
+        check.deletedWithoutIdSuccessfully(delete);
     }
-
 }

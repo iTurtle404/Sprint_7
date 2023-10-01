@@ -1,15 +1,9 @@
 package org.example.courier;
 
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
-
 import java.util.Map;
 
-import static io.restassured.RestAssured.given;
 import static org.example.constant.URLForEndpoint.*;
 
 public class CourierClient extends org.example.Client {
@@ -48,6 +42,7 @@ public class CourierClient extends org.example.Client {
                 .delete(COURIER_PATH+"/"+courierId)
                 .then().log().all();
     }
+
     @Step("Deleted Courier with ID")
     public ValidatableResponse deleteCourierWithoutId() {
         return spec()
@@ -55,5 +50,4 @@ public class CourierClient extends org.example.Client {
                 .delete(COURIER_PATH+"/:id")
                 .then().log().all();
     }
-
 }

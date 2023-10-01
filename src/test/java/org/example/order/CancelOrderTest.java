@@ -12,18 +12,16 @@ import static org.example.constant.OrderList.TRACK;
 import static org.example.courier.CourierGenerator.genericCourierRandom;
 import static org.example.order.OrderGenerator.genericOrderRandomWithoutColour;
 
-public class GetOrdeByNumrTest {
-
+public class CancelOrderTest {
     private final CourierClient client = new CourierClient();
     private final CourierAssertions check = new CourierAssertions();
     private final OrderClient clientOrd = new OrderClient();
     private final OrderAssertions checkOrd = new OrderAssertions();
-    private int trackId;
 
     @Test
-    @DisplayName("Check successfully get /api/v1/orders/track")
-    @Description("Possible get info by number order")
-    public void getOrderByNumPositive() {
+    @DisplayName("Check successfully put /api/v1/orders/cancel with correct data")
+    @Description("Possible cancel order with correct data")
+    public void cancelOrderPositive() {
         var courier = genericCourierRandom();
         client.createCourier(courier);
         var creds = Credentials.from(courier);
@@ -31,17 +29,25 @@ public class GetOrdeByNumrTest {
         int courierId = check.loggedSuccessfully(loginResponse);
         var order = genericOrderRandomWithoutColour();
         ValidatableResponse createResponse = clientOrd.createdOrder(order);
-        trackId = checkOrd.createdOrderSuccessfully(createResponse);
-        ValidatableResponse getOrderResponse = clientOrd.getOrder(trackId);
-        checkOrd.getOrderSuccessfully(getOrderResponse);
+        int trackId = checkOrd.createdOrderSuccessfully(createResponse);
+        ValidatableResponse cancelResponse = clientOrd.cancelOrder(TRACK, trackId);
+        checkOrd.cancelOrderSuccessfully(cancelResponse);
         client.deleteCourier(courierId);
-        clientOrd.cancelOrder(TRACK, trackId);
     }
     @Test
-    @DisplayName("Check unsuccessfully get /api/v1/orders/track by non-existen number")
-    @Description("Impossible get info by non-existen number")
-    public void getOrderByNumNotExistNum() {
-        ValidatableResponse getOrderNotExistResponse = clientOrd.getOrder(trackId);
-        checkOrd.getOrderNotExistUnsuccessfully(getOrderNotExistResponse);
+    @DisplayName("Check unsuccessfully put /api/v1/orders/cancel without track id")
+    @Description("Impossible cancel order without track id")
+    public void cancelOrderWithoutId() {
+        ValidatableResponse cancelOrderWithoutIdResponse = clientOrd.cancelOrderWithoutOrder();
+        checkOrd.cancelOrderWithoutIdSuccessfully(cancelOrderWithoutIdResponse);
+    }
+
+    @Test
+    @DisplayName("Check unsuccessfully put /api/v1/orders/cancel with non-existen id")
+    @Description("Impossible cancel order with non-existen id")
+    public void cancelOrderWithNotExistId() {
+        int notExist = 0;
+        ValidatableResponse cancelOrderWithNotExistIdResponse = clientOrd.cancelOrderWithNotExistOrder(TRACK, notExist);
+        checkOrd.cancelOrderWithNotExistIdSuccessfully(cancelOrderWithNotExistIdResponse);
     }
 }
