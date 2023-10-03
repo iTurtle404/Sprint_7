@@ -52,10 +52,14 @@ public class LoginCourierTest {
     public void courierLoggedErrorPass(){
         var courier = genericCourierRandom();
         client.createCourier(courier);
-        courier.setPassword("000");
         var creds = Credentials.from(courier);
         ValidatableResponse loginResponse = client.loginCourier(creds);
-        check.loggedNotExistLogPassUnsuccessfully(loginResponse);
+        int courierId = check.loggedSuccessfully(loginResponse);
+        courier.setPassword("000");
+        var creds2 = Credentials.from(courier);
+        ValidatableResponse loginErrorPassResponse = client.loginCourier(creds2);
+        check.loggedNotExistLogPassUnsuccessfully(loginErrorPassResponse);
+        client.deleteCourier(courierId);
     }
     @Test
     @DisplayName("Check unsuccessfully post /api/v1/courier/login without password")
@@ -63,9 +67,13 @@ public class LoginCourierTest {
     public void courierLoggedNullPass(){
         var courier = genericCourierRandom();
         client.createCourier(courier);
-        courier.setPassword(null);
         var creds = Credentials.from(courier);
         ValidatableResponse loginResponse = client.loginCourier(creds);
-        check.loggedNullPassUnsuccessfully(loginResponse);
+        int courierId = check.loggedSuccessfully(loginResponse);
+        courier.setPassword(null);
+        var creds2 = Credentials.from(courier);
+        ValidatableResponse loginNullPassResponse = client.loginCourier(creds2);
+        check.loggedNullPassUnsuccessfully(loginNullPassResponse);
+        client.deleteCourier(courierId);
     }
 }

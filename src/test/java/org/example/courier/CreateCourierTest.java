@@ -32,6 +32,10 @@ public class CreateCourierTest {
         client.createCourier(courier);
         ValidatableResponse createTwinRespone  = client.createCourier(courier);
         check.createdTwinUnsuccessfully(createTwinRespone);
+        var creds = Credentials.from(courier);
+        ValidatableResponse loginResponse = client.loginCourier(creds);
+        int courierId = check.loggedSuccessfully(loginResponse);
+        client.deleteCourier(courierId);
     }
     @Test
     @DisplayName("Check unsuccessfully post /api/v1/courier with exist login")
@@ -41,8 +45,7 @@ public class CreateCourierTest {
         client.createCourier(courier);
         courier.setPassword("000");
         courier.setFirstName("lll");
-        var courier2 = courier;
-        ValidatableResponse createExistLoginRespone  = client.createCourier(courier2);
+        ValidatableResponse createExistLoginRespone  = client.createCourier(courier);
         check.createdExistLoginUnsuccessfully(createExistLoginRespone);
     }
 

@@ -15,22 +15,19 @@ import static org.example.constant.OrderList.TRACK;
 public class CreateOrderColorTest extends OrderGenerator {
     private final OrderClient client = new OrderClient();
     private final OrderAssertions check = new OrderAssertions();
-        private String testName;
-        private String[] color;
+    private final String[] color;
         public CreateOrderColorTest(String testName, String[] color) {
-            this.testName = testName;
             this.color = color;
         }
 
         @Parameterized.Parameters(name = "Color field value: {0}")
         public static Object[][] getColorValue() {
-            Object[][] objects = {
+            return new Object[][]{
                     { ScooterColor.NO_COLOR.name(), ScooterColor.NO_COLOR.getValue()},
                     { ScooterColor.BLACK.name(), ScooterColor.BLACK.getValue() },
                     { ScooterColor.GRAY.name(), ScooterColor.GRAY.getValue() },
                     { ScooterColor.BOTH_COLOR.name(), ScooterColor.BOTH_COLOR.getValue()},
             };
-            return objects;
         }
     @Before
     public void setUp() {
